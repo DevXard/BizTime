@@ -1,16 +1,29 @@
-DROP DATABASE IF EXISTS biztime;
+DROP DATABASE IF EXISTS biztime_test;
 
-CREATE DATABASE biztime;
+CREATE DATABASE biztime_test;
 
-\c biztime
+\c biztime_test
 
 DROP TABLE IF EXISTS invoices;
 DROP TABLE IF EXISTS companies;
+DROP TABLE IF EXISTS companie_industry;
+DROP TABLE IF EXISTS industry;
 
 CREATE TABLE companies (
     code text PRIMARY KEY,
     name text NOT NULL UNIQUE,
     description text
+);
+
+CREATE TABLE industry (
+  code text PRIMARY KEY,
+  industry text UNIQUE
+);
+
+CREATE TABLE companie_industry (
+  industry_code text NOT NULL REFERENCES industry,
+  companie_code text NOT NULL REFERENCES companies,
+  PRIMARY KEY (industry_code, companie_code)
 );
 
 CREATE TABLE invoices (
@@ -32,3 +45,15 @@ INSERT INTO invoices (comp_Code, amt, paid, paid_date)
          ('apple', 200, false, null),
          ('apple', 300, true, '2018-01-01'),
          ('ibm', 400, false, null);
+
+INSERT INTO industry (code, industry)
+  VALUES ('acc', 'Acounting'),
+         ('mng', 'Manegment'),
+         ('tec', 'Tecnology'),
+         ('srv', 'Services');
+
+INSERT INTO companie_industry (industry_code, companie_code)
+  VALUES ('acc', 'apple'),
+         ('mng', 'apple'),
+         ('tec', 'ibm'),
+         ('srv', 'ibm');
